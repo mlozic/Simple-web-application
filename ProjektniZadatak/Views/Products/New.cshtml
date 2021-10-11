@@ -1,0 +1,55 @@
+﻿@model ProjektniZadatak.Views.ViewModels.ProductDataViewModel
+@{
+    ViewBag.Title = "New";
+}
+
+
+<h2 style="text-align:center;">@Model.Naslov</h2>
+
+@using (Html.BeginForm("Save", "Products"))
+{
+<div style="margin-left:30%;">
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Proizvod.Naziv)
+        @Html.TextBoxFor(m => m.Proizvod.Naziv, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.Proizvod.Naziv)
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Proizvod.BrojProizvoda)
+        @Html.TextBoxFor(m => m.Proizvod.BrojProizvoda, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.Proizvod.BrojProizvoda, "", new { @class = "text-danger" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Proizvod.Boja)
+        @Html.TextBoxFor(m => m.Proizvod.Boja, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.Proizvod.Boja, "", new { @class = "text-danger" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Proizvod.MinimalnaKolicinaNaSkladistu)
+        @Html.TextBoxFor(m => m.Proizvod.MinimalnaKolicinaNaSkladistu, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.Proizvod.MinimalnaKolicinaNaSkladistu, "", new { @class = "text-danger" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Proizvod.CijenaBezPDV)
+        @Html.TextBoxFor(m => m.Proizvod.CijenaBezPDV, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.Proizvod.CijenaBezPDV, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Proizvod.PotkategorijaID)
+        @Html.DropDownListFor(m => m.Proizvod.PotkategorijaID, new SelectList(Model.Potkategorije, "IDPotkategorija", "NazivPotkategorije"), "Odaberite Potkategoriju", new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.Proizvod.PotkategorijaID, "", new { @class = "text-danger" })
+    </div>
+
+    @Html.ValidationSummary(true, "Unesite tražene podatke!")
+    @Html.HiddenFor(m => m.Proizvod.IDProizvod)
+    @Html.AntiForgeryToken()
+    <a class="btn btn-danger" onclick="history.go(-1); return false;" href="#">&lt; Odustani</a>
+    <button type="submit" class="btn btn-primary" style="margin-left:22%;">Spremi</button>
+
+</div>
+}
+@section scripts{
+    @Scripts.Render("~/bundles/jqueryval");
+}

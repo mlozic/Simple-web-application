@@ -1,0 +1,17 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+
+namespace ProjektniZadatak.Views.ViewModels
+{
+    public class ProductDataViewModel
+    {
+        public IEnumerable<Potkategorija> Potkategorije { get; set; }
+        public IEnumerable<Kategorija> Kategorije { get; set; }
+        public Proizvod Proizvod { get; set; }
+        public Kategorija Kategorija { get; set; }
+        public Potkategorija Potkategorija { get; set; }
+        public string Naslov { get; set; }
+    }
+}

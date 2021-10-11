@@ -1,0 +1,51 @@
+﻿@model ProjektniZadatak.Views.ViewModels.ProductInfoViewModel
+@{
+    ViewBag.Title = "ProducttInfo";
+}
+@{
+    string url = "https://localhost:44308/Products/Edit/";
+    url += Model.Proizvod.IDProizvod;
+}
+<h2 style="text-align:center;">Informacije o proizvodu: @Model.Proizvod.Naziv</h2>
+<span><a class="btn btn-primary" style="margin-bottom:10px;" href="@url">Uredi proizvod</a></span>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>ID proizvoda</th>
+            <th>Broj proizvoda</th>
+            <th>Boja</th>
+            <th>Minimalna količina na skladištu</th>
+            <th>Cijena bez PDV-a</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>@Model.Proizvod.IDProizvod</td>
+            <td>@Model.Proizvod.BrojProizvoda</td>
+            @{
+                if (Model.Proizvod.Boja == null)
+                {
+                    <td>Nije navedeno</td>
+                }
+                else
+                {
+                    <td>@Model.Proizvod.Boja</td>
+                }
+            }
+            <td>@Model.Proizvod.MinimalnaKolicinaNaSkladistu</td>
+            <td>@Model.Proizvod.CijenaBezPDV kn</td>
+        </tr>
+    </tbody>
+</table>
+
+<h3>Kupci koji su kupili ovaj proizvod</h3>
+<div class="list-group">
+    @foreach (var kupac in Model.Kupci)
+    {
+        string kupacUrl = "https://localhost:44308/customers/customerInfo/";
+        kupacUrl += kupac.IDKupac;
+        
+        <a href="@kupacUrl" class="list-group-item list-group-item-action">@kupac.Ime @kupac.Prezime</a>
+    }
+</div>

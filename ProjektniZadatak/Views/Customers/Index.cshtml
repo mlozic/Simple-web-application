@@ -1,0 +1,154 @@
+﻿@model List<ProjektniZadatak.Grad>
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Kupci</h2>
+<a class="btn btn-primary" href="https://localhost:44308/WebForme/NewCustomer/NewCustomer.aspx" style="margin-bottom: 10px;">Dodaj novog kupca</a>
+    <select style="margin-left:10px;" id="dropdown1">
+        <option value="">Odaberite grad</option>
+        <option value="Zagreb">Zagreb</option>
+        <option value="Osijek">Osijek</option>
+        <option value="Pula">Pula</option>
+        <option value="Rijeka">Rijeka</option>
+        <option value="Split">Split</option>
+        <option value="Berlin">Berlin</option>
+        <option value="Dresden">Dresden</option>
+        <option value="Frankfurt">Frnakfurt</option>
+        <option value="Sarajevo">Sarajevo</option>
+        <option value="Zenica">Zenica</option>
+        <option value="Mostar">Mostar</option>
+        <option value="Kakanj">Kakanj</option>
+        <option value="Derventa">Derventa</option>
+    </select>
+<table id="kupci" class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Ime</th>
+            <th>Prezime</th>
+            <th>Grad</th>
+            <th>Izbriši</th>
+        </tr>
+    </thead>
+    <tbody>
+        
+    </tbody>
+</table>
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            var table = $("#kupci").DataTable({
+                "language": {
+                    "lengthMenu": 'Prikaži <select>' +
+                        '<option value="10">10</option>' +
+                        '<option value="20">20</option>' +
+                        '<option value="30">30</option>' +
+                        '<option value="40">40</option>' +
+                        '<option value="50">50</option>' +
+                        '</select> Kupaca po stranici'
+                },
+                ajax: {
+                    url: "/api/customers",
+                    dataSrc: ""
+                },
+                columns: [
+                    {
+                        data: "ime",
+                        render: function (data, type, row) {
+                            return "<a href='customers/customerInfo/" + row.idKupac + "'>" + data + "</a>";
+                        }
+                    },
+                    {
+                        data: "prezime",
+                        render: function (data, type, row) {
+                            return "<a href='customers/customerInfo/" + row.idKupac + "'>" + data + "</a>";
+                        }
+                    },
+                    {
+                        data: "gradID",
+                        render: function (data) {                            
+                            var id = data;
+                            var grad;
+                            switch (id) {
+                                case 1:
+                                    grad = "Zagreb";
+                                    break;
+                                case 2:
+                                    grad = "Osijek";
+                                    break;
+                                case 3:
+                                    grad = "Pula";
+                                    break;
+                                case 4:
+                                    grad = "Rijeka";
+                                    break;
+                                case 5:
+                                    grad = "Spliit";
+                                    break;
+                                case 6:
+                                    grad = "Berlin";
+                                    break;
+                                case 7:
+                                    grad = "Dresden";
+                                    break;
+                                case 8:
+                                    grad = "Frankfurt";
+                                    break;
+                                case 9:
+                                    grad = "Sarajevo";
+                                    break;
+                                case 10:
+                                    grad = "Zenica";
+                                    break;
+                                case 11:
+                                    grad = "Mostar";
+                                    break;
+                                case 12:
+                                    grad = "Kakanj";
+                                    break;
+                                case 13:
+                                    grad = "Derventa";
+                                    break;
+                            }
+
+                            return "<p>" + grad + "</p>";
+                        }
+                    },
+                    {
+                        data: "idKupac",
+                        render: function (data) {
+                            return "<button class='btn-link js-delete' data-kupac-id=" + data + "> Izbriši</button>";
+                        }
+                    }
+                ]
+            });
+
+
+            $("#kupci").on("click", ".js-delete", function () {
+                var button = $(this);
+                bootbox.confirm("Želite li izbrisati odabranog kupca?", function (result) {
+                    if (result) {
+                        $.ajax({
+                            url: "/api/customers/" + button.attr("data-kupac-id"),
+                            method: "DELETE",
+                            success: function () {
+                                table.row(button.parents("tr")).remove().draw();
+                            }
+                        });
+
+                    }
+                });
+            });
+            var table = $('#kupci').DataTable();
+
+            $('#dropdown1').on('change', function () {
+                table.columns(2).search(this.value).draw();
+            });
+
+
+        });
+
+    </script>
+}

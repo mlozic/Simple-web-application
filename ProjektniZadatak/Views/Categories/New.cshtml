@@ -1,0 +1,26 @@
+﻿@model ProjektniZadatak.Views.ViewModels.SubcategoriesAndCategoriesDataViewModel
+@{
+    ViewBag.Title = "New";
+}
+
+<h2 style="text-align:center;">@Model.Naslov</h2>
+
+@using (Html.BeginForm("Save", "Categories"))
+{
+
+<div style="margin-left:30%;">
+    <div class="form-group">
+        <label>Naziv</label>
+        @Html.TextBoxFor(m => m.Kategorija.NazivKategorije, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.Kategorija.NazivKategorije)
+    </div>
+    @Html.ValidationSummary(true, "Unesite tražene podatke!")
+    @Html.HiddenFor(m => m.Kategorija.NazivKategorije)
+    @Html.AntiForgeryToken()
+    <a class="btn btn-danger" onclick="history.go(-1); return false;" href="#">&lt; Odustani</a>
+    <button type="submit" class="btn btn-primary" style="margin-left:22%;">Spremi</button>
+</div>
+}
+@section scripts{
+    @Scripts.Render("~/bundles/jqueryval");
+}

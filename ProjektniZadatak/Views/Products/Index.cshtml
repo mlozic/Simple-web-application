@@ -1,0 +1,228 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Proizvodi</h2>
+<div>
+    <ul class="nav nav-tabs" role="tablist">
+        <li class="active">
+            <a href="#tab-table1" data-toggle="tab">Proizvodi</a>
+        </li>
+        <li>
+            <a href="#tab-table2" data-toggle="tab">Potkategorije</a>
+        </li>
+        <li>
+            <a href="#tab-table3" data-toggle="tab">Kategorije</a>
+        </li>
+    </ul>
+    <div class="tab-content">
+        <div class="tab-pane active" id="tab-table1">
+            <table id="myTable1" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th>Naziv</th>
+                        <th>Broj proizvoda</th>
+                        <th>Cijena bez PDV-a</th>
+                        <th>Izbriši</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+        <div class="tab-pane" id="tab-table2">
+            <table id="myTable2" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th>Naziv potkategorije</th>
+                        <th>ID kategorije</th>
+                        <th>Izbriši</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+        <div class="tab-pane" id="tab-table3">
+            <table id="myTable3" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th>Naziv kategorije</th>
+                        <th>Izbriši</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            var table = $("#myTable1").DataTable(
+                {
+                "language": {
+                    "lengthMenu": 'Prikaži <select>' +
+                        '<option value="10">10</option>' +
+                        '<option value="20">20</option>' +
+                        '<option value="30">30</option>' +
+                        '<option value="40">40</option>' +
+                        '<option value="50">50</option>' +
+                        '</select> Proizvoda po stranici' + "<a class='btn btn-primary' href='https://localhost:44308/Products/new' style='align:center; margin-left: 10px; margin-top:5px; '>Dodaj novi proizvod</a>"
+                },
+                ajax: {
+                    url: "/api/products",
+                    dataSrc: ""
+                },
+                columns: [
+                    {
+                        data: "naziv",
+                        render: function (data, type, row) {
+                            return "<a href='products/productInfo/" + row.idProizvod + "'>" + data + "</a>";
+                        }
+                    },
+                    {
+                        data: "brojProizvoda",
+                        render: function (data, type, row) {
+                            return "<a href='products/productInfo/" + row.idProizvod + "'>" + data + "</a>";
+                        }
+                    },
+                    {
+                        data: "cijenaBezPDV",
+                        render: function (data, type, row) {
+                            return "<a href='products/productInfo/" + row.idProizvod + "'>" + data + " kn</a>";
+                        }
+                    },
+                    {
+                        data: "idProizvod",
+                        render: function (data) {
+                            return "<button class='btn-link js-delete' data-proizvod-id=" + data + "> Izbriši</button>";
+                        }
+                    }
+                ]
+            });
+
+
+            $("#myTable1").on("click", ".js-delete", function () {
+                var button = $(this);
+                bootbox.confirm("Želite li izbrisati odabrani proizvod?", function (result) {
+                    if (result) {
+                        $.ajax({
+                            url: "/api/products/" + button.attr("data-proizvod-id"),
+                            method: "DELETE",
+                            success: function () {
+                                table.row(button.parents("tr")).remove().draw();
+                            }
+                        });
+
+                    }
+                });
+            });
+
+
+        });
+        //POTKATEGORIJE
+        $(document).ready(function () {
+            var table = $("#myTable2").DataTable({
+                "language": {
+                    "lengthMenu": 'Prikaži <select>' +
+                        '<option value="10">10</option>' +
+                        '<option value="20">20</option>' +
+                        '<option value="30">30</option>' +
+                        '<option value="40">40</option>' +
+                        '<option value="50">50</option>' +
+                        '</select> Potkategorija po stranici' + "<a class='btn btn-primary' href='https://localhost:44308/Subcategories/new' style='align:center; margin-left: 10px; margin-top:5px; '>Dodaj novu potkategoriju</a>"
+                },
+                ajax: {
+                    url: "/api/subcategories",
+                    dataSrc: ""
+                },
+                columns: [
+                    {
+                        data: "nazivPotkategorije",
+                        render: function (data, type, row) {
+                            return "<a href='subcategories/edit/" + row.idPotkategorija + "'>" + data + "</a>";
+                        }
+                    },
+                    {
+                        data: "kategorijaID",
+                        render: function (data, type, row) {
+                            return "<a href='subcategories/edit/" + row.idPotkategorija + "'>" + data + "</a>";
+                        }
+                    },
+                    {
+                        data: "idPotkategorija",
+                        render: function (data) {
+                            return "<button class='btn-link js-delete' data-potkategorija-id=" + data + "> Izbriši</button>";
+                        }
+                    }
+                ]
+            });
+
+
+            $("#myTable2").on("click", ".js-delete", function () {
+                var button = $(this);
+                bootbox.confirm("Želite li izbrisati odabranu potkategoriju?", function (result) {
+                    if (result) {
+                        $.ajax({
+                            url: "/api/subcategories/" + button.attr("data-potkategorija-id"),
+                            method: "DELETE",
+                            success: function () {
+                                table.row(button.parents("tr")).remove().draw();
+                            }
+                        });
+
+                    }
+                });
+            });
+
+
+        });
+        $(document).ready(function () {
+            var table = $("#myTable3").DataTable({
+                "language": {
+                    "lengthMenu": 'Prikaži <select>' +
+                        '<option value="10">10</option>' +
+                        '<option value="20">20</option>' +
+                        '<option value="30">30</option>' +
+                        '<option value="40">40</option>' +
+                        '<option value="50">50</option>' +
+                        '</select> Kategorija  po stranici' + "<a class='btn btn-primary' href='https://localhost:44308/Categories/new' style='align:center; margin-left: 10px; margin-top:5px; '>Dodaj novu Kategoriju</a>"
+                },
+                ajax: {
+                    url: "/api/categories",
+                    dataSrc: ""
+                },
+                columns: [
+                    {
+                        data: "nazivKategorije",
+                        render: function (data, type, row) {
+                            return "<a href='categories/edit/" + row.idKategorija + "'>" + data + "</a>";
+                        }
+                    },
+                    {
+                        data: "idKategorija",
+                        render: function (data) {
+                            return "<button class='btn-link js-delete' data-kategorije-id=" + data + "> Izbriši</button>";
+                        }
+                    }
+                ]
+            });
+
+
+            $("#myTable3").on("click", ".js-delete", function () {
+                var button = $(this);
+                bootbox.confirm("Želite li izbrisati odabranu kategoriju?", function (result) {
+                    if (result) {
+                        $.ajax({
+                            url: "/api/categories/" + button.attr("data-kategorije-id"),
+                            method: "DELETE",
+                            success: function () {
+                                table.row(button.parents("tr")).remove().draw();
+                            }
+                        });
+
+                    }
+                });
+            });
+
+
+        });
+    </script>
+}
